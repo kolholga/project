@@ -4,24 +4,69 @@
 class Router
 {
     public static $routers = []; //массив с маршрутами (таблица маршрутов)
-    public $rout; //текущий маршрут
+    public static $route = []; //текущий маршрут
 
-    public function __construct()
+    /**
+     * Добавляет маршрут в таблицу маршрутов
+     * @param $route
+     */
+    public static function add($route)
     {
-        //echo 'Router';
-    }
-
-    public static function getRouts($pattern, $path) //правило на вход получает
-    {
-        self::$routers[$pattern] = $path;
-        self::dispatch($path);
-    }
-
-    public static function dispatch($path) //на вход принимет из адресной строки, н-р news/index
-    {
-        foreach (self::$routers as $pattern => $item){
-            preg_match("#".$pattern."#", $item, $matches); //preg_match — Выполняет проверку на соответствие регулярному выражению
-            pr($matches);
+        foreach ($route as $k => $val) {
+            self::$routers[$k] = $val;
         }
+    }
+
+
+    /**
+     *  Метод проверяет совпадение с таблицей маршрутов
+     * @param $url - адресная строка
+     * @return bool
+     */
+    public static function checkRoute($url)
+    {
+        foreach (self::$routers as $k => $val) {
+            if (preg_match("#$k#i", $url, $matches)) {
+                //pr($val);
+                $route = $val;
+                foreach ($matches as $key => $match) {
+                    if (is_string($key)) {
+                        $route[$key] = $match;
+                    }
+                }
+
+                $route['controller'] = self::uStr($route['controller']); // перезапишет
+                if (!isset($route['action'])) {
+                    $route['action'] = 'index';
+                }
+                self::$route = $route;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function dispatch($path)
+    {
+        if (self::checkRoute($path)) {
+            $controller = '\app\controllers\\' . self::$route['controller'] . 'Controller';
+            if (class_exists($controller)) {
+                $obj = new $controller;
+            } else {
+                echo 'Контроллер ' . $controller . ' не найден';
+            }
+        } else {
+            echo '404';
+        }
+    }
+
+    private static function uStr($str)
+    {
+        $str = str_replace('-', ' ', $str);
+        $str = ucwords($str);
+        $str = str_replace(' ', '', $str);
+        pr($str);
+        return $str;
     }
 }
