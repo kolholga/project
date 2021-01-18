@@ -20,7 +20,7 @@ class Router
     public static function dispatch($path) //на вход принимет из адресной строки, н-р news/index
     {
         foreach (self::$routers as $pattern => $item){
-            preg_match("#".$pattern."#", $item, $matches);
+            preg_match("#".$pattern."#", $item, $matches); //preg_match — Выполняет проверку на соответствие регулярному выражению
             pr($matches);
         }
     }
