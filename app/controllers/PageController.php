@@ -4,10 +4,23 @@
 namespace app\controllers;
 
 
-class PageController
+use system\core\Controller;
+
+class PageController extends Controller
 {
-    public function __construct()
+
+    public function indexAction()
     {
-        echo 'Page';
+        echo 'Page::index';
+    }
+
+    public function testNewAction()
+    {
+        echo 'Page::testNew';
+    }
+
+    public function testAction()
+    {
+        echo 'Page::test';
     }
 }

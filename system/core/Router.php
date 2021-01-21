@@ -1,5 +1,6 @@
 <?php
 
+namespace system\core;
 
 class Router
 {
@@ -25,6 +26,7 @@ class Router
      */
     public static function checkRoute($url)
     {
+        $url = self::removeQueryString($url); //очищенный $url
         foreach (self::$routers as $k => $val) {
             if (preg_match("#$k#i", $url, $matches)) {
                 //pr($val);
@@ -39,6 +41,7 @@ class Router
                 if (!isset($route['action'])) {
                     $route['action'] = 'index';
                 }
+
                 self::$route = $route;
                 return true;
             }
@@ -52,12 +55,21 @@ class Router
         if (self::checkRoute($path)) {
             $controller = '\app\controllers\\' . self::$route['controller'] . 'Controller';
             if (class_exists($controller)) {
-                $obj = new $controller;
+
+                $obj = new $controller(self::$route);
+                $action = self::lStr(self::$route['action']) . 'Action';
+                //r($action);
+                if (method_exists($obj, $action)) { // method_exists — Проверяет, существует ли метод в данном классе
+                    $obj->$action();
+                } else {
+                    echo 'Метод ' . $action . ' не найден';
+                }
             } else {
                 echo 'Контроллер ' . $controller . ' не найден';
             }
         } else {
-            echo '404';
+            http_response_code(404); // http_response_code — Получает или устанавливает код ответа HTTP
+            include '404.html';
         }
     }
 
@@ -66,7 +78,28 @@ class Router
         $str = str_replace('-', ' ', $str);
         $str = ucwords($str);
         $str = str_replace(' ', '', $str);
-        pr($str);
+        //pr($str);
         return $str;
+    }
+
+    private static function lStr($str)
+    {
+        return lcfirst(self::uStr($str)); // lcfirst — Преобразует первый символ строки в нижний регистр
+    }
+
+//удаляет из адресной строки явные GET-параметры (то, что в адресной строке посе знака ?)
+    private static function removeQueryString($url)
+    {
+        if ($url != '') {
+            $params = explode('&', $url); // теперь $params - это массив
+            if (strpos($params[0], '=') === false) {  //strpos — Возвращает позицию первого вхождения подстроки
+                return $params[0];
+            } else {
+                return '';
+            }
+            //pr($params);
+        }
+        //pr($url);
+        return $url;
     }
 }
