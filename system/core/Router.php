@@ -28,11 +28,11 @@ class Router
     {
         $url = self::removeQueryString($url); //очищенный $url
         foreach (self::$routers as $k => $val) {
-            if (preg_match("#$k#i", $url, $matches)) {
+            if (preg_match("#$k#i", $url, $matches)) { // preg_match — Выполняет проверку на соответствие регулярному выражению
                 //pr($val);
                 $route = $val;
                 foreach ($matches as $key => $match) {
-                    if (is_string($key)) {
+                    if (is_string($key)) { // is_string — Проверяет, является ли переменная строкой
                         $route[$key] = $match;
                     }
                 }
@@ -54,13 +54,14 @@ class Router
     {
         if (self::checkRoute($path)) {
             $controller = '\app\controllers\\' . self::$route['controller'] . 'Controller';
-            if (class_exists($controller)) {
+            if (class_exists($controller)) { // class_exists — Проверяет, был ли объявлен класс
 
                 $obj = new $controller(self::$route);
                 $action = self::lStr(self::$route['action']) . 'Action';
                 //r($action);
                 if (method_exists($obj, $action)) { // method_exists — Проверяет, существует ли метод в данном классе
                     $obj->$action();
+                    $obj->getView();
                 } else {
                     echo 'Метод ' . $action . ' не найден';
                 }
@@ -75,8 +76,8 @@ class Router
 
     private static function uStr($str)
     {
-        $str = str_replace('-', ' ', $str);
-        $str = ucwords($str);
+        $str = str_replace('-', ' ', $str); // str_replace — Заменяет все вхождения строки поиска на строку замены
+        $str = ucwords($str); // ucwords — Преобразует в верхний регистр первый символ каждого слова в строке
         $str = str_replace(' ', '', $str);
         //pr($str);
         return $str;
@@ -91,7 +92,7 @@ class Router
     private static function removeQueryString($url)
     {
         if ($url != '') {
-            $params = explode('&', $url); // теперь $params - это массив
+            $params = explode('&', $url); // теперь $params - это массив // explode — Разбивает строку с помощью разделителя
             if (strpos($params[0], '=') === false) {  //strpos — Возвращает позицию первого вхождения подстроки
                 return $params[0];
             } else {

@@ -9,16 +9,21 @@ use system\core\Controller;
 class MainController extends Controller
 {
 
+    public $layout = 'main';
+
     // методы с префиксом Action - публичные методы
+
     public function indexAction()
     {
-        pr($this->route);
-        echo 'Main::index';
+        //pr($this->route);
+        //echo 'Main::index';
+        //$this->view = 'test';
+        $this->setVars(['name' => 'vasya']);
     }
 
     public function testAction()
     {
-        echo 'Main::test';
+        //echo 'Main::test';
     }
 
     public function check()

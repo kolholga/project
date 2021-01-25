@@ -1,0 +1,1 @@
+Это файл - Page/index.php

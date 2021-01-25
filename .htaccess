@@ -4,5 +4,5 @@ addDefaultCharset utf8
 
 RewriteEngine on #Включает mod_rewrite - модуль сервера apache для манипуляции и изменения URL (работает на основе регулярных выражений)
 
-# все запросы отправляются на index.php
+# все запросы, которые поступают на наш проект, отправляются в папку public
 RewriteRule ^(.*)$ /public/$1 [QSA,L]
