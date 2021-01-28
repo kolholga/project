@@ -45,3 +45,5 @@ Router::add(['^$' => ['controller' => 'Main', 'action' => 'index']]); // ^$ - п
 Router::dispatch($qStr);
 
 //pr(Router::$route);
+
+pr(\system\core\Db::$queries);

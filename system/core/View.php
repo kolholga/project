@@ -13,7 +13,11 @@ class View
     public function __construct($route, $layout = "", $view = "")
     {
         $this->route = $route;
-        $this->layout = $layout ?: LAYOUT; //короткая запись if
+        if($layout === false){
+            $this->layout = false;
+        }else{
+            $this->layout = $layout ?: LAYOUT; //короткая запись if
+        }
         $this->view = $view;
 
         //подробная запись if
@@ -47,14 +51,16 @@ class View
 
         $content = ob_get_clean(); // достает содержимое буфера и возвращает (и все записал в переменную и очистил)
         //echo $content;
-
-        // н-р, /app/views/layouts/default.php
-        $path_layout = ROOT . '/app/views/layouts/' . $this->layout . '.php';
-        if(is_file($path_layout)){
-            require $path_layout;
+        if($this->layout !== false){
+            // н-р, /app/views/layouts/default.php
+            $path_layout = ROOT . '/app/views/layouts/' . $this->layout . '.php';
+            if(is_file($path_layout)){
+                require $path_layout;
+            }else{
+                echo 'шаблон ' . $this->layout . ' не найден';
+            }
         }else{
-            echo 'шаблон ' . $this->layout . ' не найден';
+            echo $content;
         }
-
     }
 }
