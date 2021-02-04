@@ -10,13 +10,20 @@ use system\core\Controller;
 class MainController extends Controller
 {
 
-    public $layout = 'default';
+    //public $layout = 'default';
 
     // методы с префиксом Action - публичные методы
 
     public function indexAction()
     {
         $news = new News();
+        $arNews = $news->findAll();
+
+        $this->setVars(['news' => $arNews]);
+
+
+        /*
+        $news = new NewsController();
         //echo $news->table;
         //$arNews = $news->query("SELECT * FROM {$news->table}");
 
@@ -37,8 +44,10 @@ class MainController extends Controller
         //echo 'Main::index';
         //$this->view = 'test';
         $this->setVars(['name' => 'Vasya', 'arArray' => $arr]);
+        */
     }
 
+    /*
     public function testAction()
     {
         //echo 'Main::test';
@@ -48,7 +57,7 @@ class MainController extends Controller
     {
 
     }
-
+    */
     /* например
     public function about()
     {
