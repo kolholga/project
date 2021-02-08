@@ -5,9 +5,9 @@ namespace app\controllers;
 
 
 use app\models\News;
-use system\core\Controller;
 
-class MainController extends Controller
+
+class MainController extends AppController
 {
 
     //public $layout = 'default';
